@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Student | COSS</title>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="navbar">
+        <a class="brand" href="{{ url_for('students.list_students') }}">
+            COSS
+        </a>
+        <span class="brand-description">Centre Operations Support System</span>
+        <nav>
+            <a href="{{ url_for('students.list_students') }}">Students
+            </a>
+        </nav>
+    </header>
+
+    <main class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <section class="card">
+            <a class="back-link"
+               href="{{ url_for('students.list_students') }}">
+                &larr; Back to Students
+            </a>
+
+            <h1>Register a New Student</h1>
+            <p class="muted">Enter the student details below.</p>
+
+            <form method="POST"
+                  action="{{ url_for('students.create_student') }}">
+
+                <div class="form-group">
+                    <label for="first_name">First Name</label>
+                    <input
+                        type="text"
+                        id="first_name"
+                        name="first_name"
+                        maxlength="100"
+                        required
+                        autocomplete="given-name"
+                        value="{{ request.form.get('first_name', '') }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="last_name">Last Name</label>
+                    <input
+                        type="text"
+                        id="last_name"
+                        name="last_name"
+                        maxlength="100"
+                        required
+                        autocomplete="family-name"
+                        value="{{ request.form.get('last_name', '') }}">
+                </div>
+
+                <button type="submit" class="button success">
+                    Register Student
+                </button>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

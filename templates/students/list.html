@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Students | COSS</title>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="navbar">
+        <a class="brand" href="{{ url_for('students.list_students') }}">
+            COSS
+        </a>
+        <span class="brand-description">Centre Operations Support System</span>
+        <nav>
+            <a href="{{ url_for('students.list_students') }}">Students</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <section class="card">
+            <div class="page-heading">
+                <div>
+                    <h1>Students</h1>
+                    <p class="muted">View and search student records.</p>
+                </div>
+
+                <a class="button success"
+                   href="{{ url_for('students.create_student') }}">
+                    + Register New Student
+                </a>
+            </div>
+
+            <form method="GET"
+                  action="{{ url_for('students.list_students') }}"
+                  class="search-form">
+
+                <input
+                    type="search"
+                    name="q"
+                    placeholder="Search first or last name..."
+                    value="{{ search_term }}"
+                    aria-label="Search students">
+
+                <button type="submit" class="button primary">
+                    Search
+                </button>
+
+                <a class="button secondary"
+                   href="{{ url_for('students.list_students') }}">
+                    Clear
+                </a>
+            </form>
+
+            {% if students %}
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in students %}
+                                <tr>
+                                    <td>{{ student.student_id }}</td>
+                                    <td>{{ student.first_name }}</td>
+                                    <td>{{ student.last_name }}</td>
+                                    <td>
+                                        <span class="status
+                                            {{ student.status|lower }}">
+                                            {{ student.status }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="empty-state">
+                    {% if search_term %}
+                        No students found matching your search.
+                    {% else %}
+                        No students have been registered yet.
+                    {% endif %}
+                </p>
+            {% endif %}
+        </section>
+    </main>
+</body>
+</html>

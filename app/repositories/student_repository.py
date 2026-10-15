@@ -32,6 +32,30 @@ class StudentRepository:
 
         finally:
             connection.close()
+    
+    def update(self, student):
+        connection = get_connection()
+
+        try:
+            cursor = connection.execute(
+                self.queries["update_student"],
+                (
+                    student.first_name,
+                    student.last_name,
+                    student.status,
+                    student.student_id,
+                ),
+            )
+
+            connection.commit()
+            return cursor.rowcount > 0
+
+        except Exception:
+            connection.rollback()
+            raise
+
+        finally:
+            connection.close()
 
     def get_by_id(self, student_id):
         connection = get_connection()
@@ -57,6 +81,30 @@ class StudentRepository:
         finally:
             connection.close()
 
+    def get_all(self):
+        connection = get_connection()
+
+        try:
+            rows = connection.execute(
+                self.queries["get_all_students"]
+            ).fetchall()
+
+            students = []
+
+            for row in rows:
+                student = Student(
+                    row["student_id"],
+                    row["first_name"],
+                    row["last_name"]
+                )
+                student.status = row["status"]
+                students.append(student)
+
+            return students
+
+        finally:
+            connection.close()
+    
     def search(self, search_term):
         connection = get_connection()
 
@@ -85,30 +133,6 @@ class StudentRepository:
         finally:
             connection.close()
 
-    def update(self, student):
-        connection = get_connection()
-
-        try:
-            cursor = connection.execute(
-                self.queries["update_student"],
-                (
-                    student.first_name,
-                    student.last_name,
-                    student.status,
-                    student.student_id,
-                ),
-            )
-
-            connection.commit()
-            return cursor.rowcount > 0
-
-        except Exception:
-            connection.rollback()
-            raise
-
-        finally:
-            connection.close()
-
     def deactivate(self, student_id):
         connection = get_connection()
 
@@ -128,26 +152,22 @@ class StudentRepository:
         finally:
             connection.close()
 
-    def get_all(self):
+    def activate(self, student_id):
         connection = get_connection()
 
         try:
-            rows = connection.execute(
-                self.queries["get_all_students"]
-            ).fetchall()
+            cursor = connection.execute(
+                self.queries["activate_student"],
+                (student_id,),
+            )
 
-            students = []
+            connection.commit()
+            return cursor.rowcount > 0
 
-            for row in rows:
-                student = Student(
-                    row["student_id"],
-                    row["first_name"],
-                    row["last_name"]
-                )
-                student.status = row["status"]
-                students.append(student)
-
-            return students
+        except Exception:
+            connection.rollback()
+            raise
 
         finally:
             connection.close()
+

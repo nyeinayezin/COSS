@@ -1,9 +1,6 @@
 import os
-
 from flask import Flask
-
 from app.web.student_routes import student_bp
-
 
 def create_app():
     app = Flask(
@@ -23,7 +20,6 @@ def create_app():
 
 
 app = create_app()
-
 
 if __name__ == "__main__":
     app.run(debug=True)

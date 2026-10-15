@@ -74,3 +74,18 @@ class StudentService:
 
         student.deactivate()
         return student
+
+    def activate_student(self, student_id):
+        student = self.student_repository.get_by_id(student_id)
+
+        if student is None:
+            raise ValueError("Student not found")
+
+        if student.status == "ACTIVE":
+            raise ValueError("Student is already active")
+
+        if not self.student_repository.activate(student_id):
+            raise ValueError("Unable to activate student")
+
+        student.status = "ACTIVE"
+        return student

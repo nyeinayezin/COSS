@@ -84,6 +84,20 @@
                                             {{ student.status }}
                                         </span>
                                     </td>
+                                    <td> {% if student.status == "ACTIVE" %} 
+                                        <a class="button secondary" href="{{ url_for( 'students.edit_student', student_id=student.student_id ) }}"> Edit </a> 
+                                            <form method="POST" action="{{ url_for( 'students.deactivate_student', student_id=student.student_id ) }}" onsubmit="return confirm( 'Are you sure you want to deactivate this student?' );" style="display: inline;"> 
+                                                <button type="submit" class="button danger"> Deactivate 
+                                                </button> 
+                                            </form> 
+                                         {% else %} 
+                                            <form method="POST" action="{{ url_for( 'students.activate_student', student_id=student.student_id ) }}" onsubmit="return confirm( 'Are you sure you want to activate this student?' );" style="display: inline;">
+                                                <button type="submit" class="button success"> Activate 
+                                                </button> 
+                                            </form> 
+                                            
+                                        {% endif %} 
+                                    </td>
                                 </tr>
                             {% endfor %}
                         </tbody>
